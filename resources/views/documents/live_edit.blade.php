@@ -1,0 +1,10 @@
+@extends('layouts.app')
+@section('title','Editar material')
+@section('content')
+<section class="container page py-5"><h1 class="page-title">Editar material</h1><p class="text-secondary">Modifica la información académica; el archivo adjunto se conserva.</p><div class="panel mx-auto" style="max-width:790px">@if($errors->any())<div class="alert alert-danger">{{ $errors->first() }}</div>@endif
+<form method="POST" action="{{ route('documents.update',$document) }}">@csrf @method('PUT')
+<div class="mb-3"><label class="form-label">Título</label><input class="form-control" name="title" required maxlength="200" value="{{ old('title',$document->title) }}"></div>
+<div class="mb-3"><label class="form-label">Descripción</label><textarea class="form-control" name="description" maxlength="3000">{{ old('description',$document->description) }}</textarea></div>
+<div class="row g-3"><div class="col-md-6"><label class="form-label">Área</label><select name="academic_area_id" class="form-select" required>@foreach($areas as $area)<option value="{{ $area->id }}" @selected(old('academic_area_id',$document->academic_area_id)==$area->id)>{{ $area->name }}</option>@endforeach</select></div><div class="col-md-6"><label class="form-label">Tipo</label><select name="document_type_id" class="form-select" required>@foreach($types as $type)<option value="{{ $type->id }}" @selected(old('document_type_id',$document->document_type_id)==$type->id)>{{ $type->name }}</option>@endforeach</select></div><div class="col-md-6"><label class="form-label">Tema</label><input name="topic" class="form-control" maxlength="160" required value="{{ old('topic',$document->topic) }}"></div><div class="col-md-6"><label class="form-label">Ciclo</label><input name="academic_cycle" class="form-control" maxlength="30" required value="{{ old('academic_cycle',$document->academic_cycle) }}"></div></div>
+<div class="d-flex gap-2 justify-content-end mt-4"><a href="{{ route('documents.show',$document) }}" class="btn btn-outline-brand">Cancelar</a><button class="btn btn-brand">Guardar cambios</button></div></form></div></section>
+@endsection
