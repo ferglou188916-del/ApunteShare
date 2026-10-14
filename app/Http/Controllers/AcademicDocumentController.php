@@ -41,7 +41,7 @@ class AcademicDocumentController extends Controller
 
     public function create(Request $request)
     {
-        abort_unless($request->user()->is_active && $request->user()->role === 'contributor', 403);
+        abort_unless($request->user()->is_active && in_array($request->user()->role, ['contributor', 'admin'], true), 403);
 
         return view('documents.live_upload', [
             'areas' => AcademicArea::where('is_active', true)->orderBy('name')->get(),
@@ -51,7 +51,7 @@ class AcademicDocumentController extends Controller
 
     public function store(Request $request)
     {
-        abort_unless($request->user()->is_active && $request->user()->role === 'contributor', 403);
+        abort_unless($request->user()->is_active && in_array($request->user()->role, ['contributor', 'admin'], true), 403);
 
         $data = $request->validate([
             'file' => ['required', 'file', 'max:10240', 'mimes:pdf,docx'],

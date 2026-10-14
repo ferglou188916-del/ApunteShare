@@ -3,7 +3,7 @@
 @section('content')
 <div class="container py-5"><div class="auth-card mx-auto" style="max-width:520px">
 <h1 class="h3 mb-3">Recuperar contraseña</h1>
-<p class="text-secondary">Escribe tu correo para generar un enlace de recuperación.</p>
+<p class="text-secondary">Escribe tu correo registrado para recibir un enlace de recuperación.</p>
 @if(session('status'))<div class="alert alert-success" role="status">{{ session('status') }}</div>@endif
 @if($errors->any())<div class="alert alert-danger" role="alert">{{ $errors->first() }}</div>@endif
 <form method="POST" action="{{ route('password.email') }}">@csrf

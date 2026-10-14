@@ -9,6 +9,7 @@ use App\Models\Favorite;
 use App\Models\Report;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 
@@ -39,12 +40,14 @@ class ApunteShareAuthController extends Controller
             'password' => $data['password'],
         ]);
         $user->role = $data['role'];
+        $user->is_active = true;
         $user->save();
 
+        event(new Registered($user));
         Auth::login($user);
         $request->session()->regenerate();
 
-        return redirect()->route('apunteshare.home')->with('status', 'Cuenta creada correctamente.');
+        return redirect()->route('verification.notice');
     }
 
     public function login(Request $request)
@@ -96,10 +99,17 @@ class ApunteShareAuthController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255', Rule::unique('users', 'email')->ignore($user->id)],
         ]);
-        $user->update([
+        $newEmail = mb_strtolower(trim($data['email']));
+        $emailChanged = $user->email !== $newEmail;
+        $user->forceFill([
             'name' => $data['name'],
-            'email' => mb_strtolower(trim($data['email'])),
-        ]);
+            'email' => $newEmail,
+            'email_verified_at' => $emailChanged ? null : $user->email_verified_at,
+        ])->save();
+        if ($emailChanged) {
+            $user->sendEmailVerificationNotification();
+            return redirect()->route('verification.notice');
+        }
         return back()->with('status', 'Perfil actualizado.');
     }
 }

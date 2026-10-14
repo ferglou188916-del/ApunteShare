@@ -1,0 +1,9 @@
+@extends('layouts.app')
+@section('title', 'Administrar publicaciones')
+@section('content')
+<section class="container page py-5"><h1 class="page-title">Gestión de publicaciones</h1><p class="lead-muted">Ocultar, publicar o eliminar definitivamente documentos y sus archivos.</p>@include('admin.live.nav')
+<form method="GET" class="d-flex flex-wrap gap-2 mb-3"><input class="form-control" style="max-width:300px" name="q" value="{{ request('q') }}" placeholder="Título del material"><select name="status" class="form-select" style="max-width:180px"><option value="">Todos</option><option value="published" @selected(request('status') === 'published')>Publicados</option><option value="hidden" @selected(request('status') === 'hidden')>Ocultos</option></select><button class="btn btn-brand">Filtrar</button></form>
+<div class="panel table-responsive"><table class="table align-middle"><thead><tr><th>Material</th><th>Autor</th><th>Tipo</th><th>Estado</th><th>Acción</th></tr></thead><tbody>
+@forelse($documents as $doc)<tr><td>{{ $doc->title }}</td><td>{{ $doc->user?->name }}</td><td>{{ $doc->documentType?->name }}</td><td>{{ $doc->status }}</td><td><form method="POST" action="{{ route('admin.documents.status', $doc) }}">@csrf @method('PATCH')<input type="hidden" name="status" value="{{ $doc->status === 'published' ? 'hidden' : 'published' }}"><button class="btn btn-sm btn-outline-brand">{{ $doc->status === 'published' ? 'Ocultar' : 'Publicar' }}</button></form><form method="POST" action="{{ route('admin.documents.delete', $doc) }}" class="mt-2" onsubmit="return confirm('Eliminar definitivamente la publicación y su archivo? No se puede deshacer.')">@csrf @method('DELETE')<button class="btn btn-sm btn-outline-danger">Eliminar</button></form></td></tr>@empty<tr><td colspan="5">Sin documentos.</td></tr>@endforelse
+</tbody></table></div><div class="mt-3">{{ $documents->links() }}</div></section>
+@endsection

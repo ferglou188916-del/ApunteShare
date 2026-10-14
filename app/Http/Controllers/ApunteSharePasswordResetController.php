@@ -22,7 +22,7 @@ class ApunteSharePasswordResetController extends Controller
         $data = $request->validate(['email' => ['required', 'email', 'max:255']]);
         Password::sendResetLink(['email' => mb_strtolower(trim($data['email']))]);
 
-        return back()->with('status', 'Si el correo está registrado, se ha generado un enlace de recuperación.');
+        return back()->with('status', 'Si el correo está registrado, recibirás un enlace de recuperación.');
     }
 
     public function resetForm(Request $request, string $token)

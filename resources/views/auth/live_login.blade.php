@@ -12,7 +12,7 @@
       <button class="btn btn-brand w-100" type="submit">Iniciar sesión</button>
     </form>
     <div class="small text-center mt-3">¿No tienes cuenta? <a class="link-brand" href="{{ route('apunteshare.register') }}">Regístrate</a></div>
-    <p class="small text-muted text-center mt-2">La recuperación de contraseña se incorporará en el próximo módulo.</p>
+    <p class="small text-muted text-center mt-2"><a class="link-brand" href="{{ route('password.request') }}">¿Olvidaste tu contraseña?</a></p>
   </div>
 </div></div>
 @endsection

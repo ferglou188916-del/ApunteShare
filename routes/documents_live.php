@@ -3,7 +3,7 @@
 use App\Http\Controllers\AcademicDocumentController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/materiales', [AcademicDocumentController::class, 'index'])->name('documents.index');
     Route::get('/compartir-material', [AcademicDocumentController::class, 'create'])->name('documents.create');
     Route::post('/compartir-material', [AcademicDocumentController::class, 'store'])->middleware('throttle:15,1')->name('documents.store');
